@@ -57,6 +57,7 @@ def create_accounts():
         jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
     )
 
+
 ######################################################################
 # LIST ALL ACCOUNTS
 ######################################################################
@@ -84,6 +85,7 @@ def get_accounts(account_id):
             f"Account with id [{account_id}] could not be found.",
         )
     return make_response(jsonify(account.serialize()), status.HTTP_200_OK)
+
 
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
