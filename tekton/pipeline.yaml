@@ -2,6 +2,7 @@
 # This pipeline needs the following tasks from Tekton Catalog
 #   - git-clone
 #   - flake8
+#   - buildah
 #
 ---
 apiVersion: tekton.dev/v1beta1
@@ -15,6 +16,9 @@ spec:
     - name: repo-url
     - name: branch
       default: main
+    - name: build-image
+      type: string
+      description: The image to build
   tasks:
     - name: init
       workspaces:
@@ -64,3 +68,17 @@ spec:
         value: "-v --with-spec --spec-color"
       runAfter:
         - clone
+
+    - name: build
+      workspaces:
+        - name: source
+          workspace: pipeline-workspace
+      taskRef:
+        name: buildah
+        kind: ClusterTask
+      params:
+      - name: IMAGE
+        value: "$(params.build-image)"
+      runAfter:
+        - lint
+        - tests
